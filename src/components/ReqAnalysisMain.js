@@ -84,8 +84,14 @@ function InputTextField(props) {
     };
     
   function encryptdata(){
-    var encrypted = document.getElementById("filled-basic").value;
+    console.log(1);
+    var encrypted = "";
+    if (document.getElementById("filled-basic")){
+          encrypted = document.getElementById("filled-basic").value;
+    
+    console.log(encrypted);
     var CryptoJS = require("crypto-js");
+    console.log(CryptoJS);
     var base64Key = "dHJhaW51c19hdXRoUGxheQ==";
       var key = CryptoJS.enc.Base64.parse(base64Key);
       var encryptedData = CryptoJS.AES.encrypt(encrypted,key,{
@@ -93,6 +99,7 @@ function InputTextField(props) {
           padding: CryptoJS.pad.Pkcs7
       });
       console.log(encryptedData);
+    } ;
   
   }
 
@@ -109,7 +116,7 @@ function InputTextField(props) {
 
     <form className={classes.root} noValidate autoComplete="off">
       <TextField multiline rows={10} className={classes.box1} id="filled-basic" 
-        label="Enter Encryted Text" variant="filled" 
+        label="Enter Encrypted Text" variant="filled" 
         value={props.encrypted}
         onChange={(e)=>handleChange("ENCRYPT_IN",e.target.value)}
 />
@@ -117,7 +124,7 @@ function InputTextField(props) {
       <TextField multiline rows={10} 
         className={classes.box2} 
         id="outlined-basic" 
-        label="Enter Decryted Text" 
+        label="Enter Decrypted Text" 
         variant="filled"                     
         value={props.decrypted}
         onChange={(e)=>handleChange("DECRYPT_IN",e.target.value)}
@@ -126,7 +133,7 @@ function InputTextField(props) {
     </Grid>
     <Grid item md={12} sm={6}>
 
-    <Button className={classes.Encrypt} variant="contained" color="secondary" onClick="encryptdata()">
+    <Button className={classes.Encrypt} variant="contained" color="secondary" onClick={encryptdata}>
         Encrypt->Decrypt
     </Button>
     <Button className={classes.Decrypt} variant="contained" color="secondary">
