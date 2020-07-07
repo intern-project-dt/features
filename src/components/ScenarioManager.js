@@ -282,10 +282,27 @@ const CSSTextField = withStyles({
                 value={props.scenarioEditted}
                 onChange={(e)=>handleChange("SCEDIT_IN",e.target.value)}
                 >
-                          <MenuItem value="DEFAULT">DEFAULT</MenuItem>
-                          <MenuItem value="EXTERNAL">EXTERNAL</MenuItem>
-                          <MenuItem value="NATIVE">NATIVE</MenuItem>
-                          <MenuItem value="GRAPH">GRAPH</MenuItem>
+                          <MenuItem value="I want to know my data usage">I want to know my data usage</MenuItem>
+                          <MenuItem value="I want to change my alterante phone number">I want to change my alterante phone number</MenuItem>
+                          <MenuItem value="I want to know my current bill plan">I want to know my current bill plan</MenuItem>
+                          <MenuItem value="I want to migrate from prepaid to postpaid">I want to migrate from prepaid to postpaid</MenuItem>
+                          <MenuItem value="chatbot_greeting">chatbot_greeting</MenuItem>
+                          <MenuItem value="chatbot_closure">chatbot_closure</MenuItem>
+                          <MenuItem value="chatbot_help">chatbot_help</MenuItem>
+                          <MenuItem value="chatbot_new_bill_plan">chatbot_new_bill_plan</MenuItem>
+                          <MenuItem value="chatbot_active_ir">chatbot_active_ir</MenuItem>
+                          <MenuItem value="chatbot_nearest_store">chatbot_nearest_store</MenuItem>
+                          <MenuItem value="chatbot_others">chatbot_others</MenuItem>
+                          <MenuItem value="I want to migrate change my email id">I want to migrate change my email id</MenuItem>
+                          <MenuItem value="I want to disconnect my number">I want to disconnect my number</MenuItem>
+                          <MenuItem value="chatbot_create_family">chatbot_create_family</MenuItem>
+                          <MenuItem value="chatbot_set_data_limit">chatbot_set_data_limit</MenuItem>
+                          <MenuItem value="chatbot_track_data_usage">chatbot_track_data_usage</MenuItem>
+                          <MenuItem value="hr_leave_application">hr_leave_application</MenuItem>
+                          <MenuItem value="hr_leave_policies">hr_leave_policies</MenuItem>
+                          <MenuItem value="hr_pan_update">hr_pan_update</MenuItem>
+                          <MenuItem value="hr_last_claim_date">hr_last_claim_date</MenuItem>
+                          <MenuItem value="hr_slip_required">hr_slip_required</MenuItem>
                 </Select>
                    </div>
                 
@@ -438,10 +455,10 @@ const CSSTextField = withStyles({
             <div className= "field1">  
             
                 <br /> <br />
-                <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Feedback Required:  </div> </p>
+                <p> <div className="field1" style={{ position: "relative", left:-100, top:20}}> Feedback Required:  </div> </p>
               <div className="block"> 
                     <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                    <Select style={{width:205, height: 50, position: "relative", left:10, top:-10}}
                       native
                       value={props.scenarioRemove}
                       onChange={(e)=>handleChange("USER_IN",e.target.value)}
@@ -459,7 +476,7 @@ const CSSTextField = withStyles({
             </div>
             <br/>
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:350, top:20}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:550, top:40}}
             onClick={remScenario}>
                 Delete Bot
             </BootstrapButton>

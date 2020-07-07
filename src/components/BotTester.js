@@ -18,8 +18,11 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import { connect } from "react-redux";
+//import {BotTesterActionType} from "../../Action-Types/bot-tester.actiontype";
+//import * as Tester from "../../Actions/bot-tester.action"
 import {BotTesterActionType} from "../action-types/bot-tester.actiontype";
 import * as Tester from "../actions/bot-tester.action"
+import eclipsefile from "./eclipse.ini"
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -148,7 +151,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function InputTextField(props) {
+function InputTextField(props) {
     const classes = useStyles();
     
     async function downloadReport(){
@@ -186,6 +189,23 @@ export default function InputTextField(props) {
     }
 
     async function testBot(){
+            let res =  await fetch('http://10.5.205.104:8080/trainer/validateBot/{props.botName}', {
+                method: 'post',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json'
+                },
+                body :{
+                  botAccessToken:props.botName,
+                  testFile:eclipsefile
+                }
+                
+            });
+            //console.log(res);
+
+            let result = await res.json();
+
+            console.log(result);
 
     }
 
@@ -223,17 +243,26 @@ export default function InputTextField(props) {
             <br />
 
 
-            <div> 
-            <UpButton variant="contained" color="primary" component="span" style={{ width:200, position:"relative", left:50, top:-20}}>
-                Choose File
-            </UpButton>
-            </div>
-              <div>
+          <div className={classes.root} style={{  position:"relative", left:150, top:-10}}>
+           <input
+            accept="image/*"
+            className={classes.input}
+            id="contained-button-file"
+            multiple
+            type="file"
+          />
+          <br />
+          <label htmlFor="contained-button-file">
+            
+          </label>
+        
+        </div>
+      <div>
                   
-                  <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{ width:100, position:"relative", left:50, top:20}}
-                  onClick={testBot}>
+        <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{ width:100, position:"relative", left:50, top:20}}
+              onClick={testBot}>
                     Test
-                </BootstrapButton> &emsp;
+        </BootstrapButton> &emsp;
 
                 <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{ width:100, position:"relative", left:50, top:20}}
                 onClick={cancelTest}>
@@ -264,4 +293,11 @@ export default function InputTextField(props) {
     );
   }
 
+  function mapStatetoProps(state){
+    return{
+      botName:state.topBar.botName,
+    };
+  }
+
+export default connect(mapStatetoProps)(InputTextField)
   

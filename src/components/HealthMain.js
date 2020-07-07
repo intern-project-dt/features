@@ -34,16 +34,12 @@ const StyledTableRow = withStyles((theme) => ({
 
 
 
-function createData(Bot_Name,Bot_Status, DT, AI, Elastic_Search,Config) {
-  return { Bot_Name,Bot_Status, DT, AI, Elastic_Search,Config };
+function createData(Bot_Name,status, DT, AI, AutoSuggest,welcomeConfig) {
+  return { Bot_Name,status, DT, AI, AutoSuggest,welcomeConfig };
 }
 
 const rows = [
-  createData('Postpaid Siebel','UP','DOWN','DOWN','UP','UP'),
-  createData('Postpaid','UP','DOWN','DOWN','UP','UP'),
-  createData('Payments Bank','UP','DOWN','DOWN','UP','UP'),
-  createData('HR','UP','DOWN','DOWN','UP','UP'),
-  createData('Prepaid','UP','DOWN','DOWN','UP','UP'),
+  
 ];
 
 const useStyles = makeStyles({
@@ -51,16 +47,16 @@ const useStyles = makeStyles({
     maxWidth: 900,
     position :"relative",
     left:400,
-    top:50
+    top:-400
   },
   headline: {
     position: "relative",
-    top: -385,
-    left:-175,
+    top: -425,
+    left:400,
   },
   line :{
     position:"relative",
-    top: -400,
+    top: -420,
     width: 900,
     left: 400,
     height: 2,
@@ -68,11 +64,39 @@ const useStyles = makeStyles({
   }
 });
 
+
+
 export default function CustomizedTables() {
   const classes = useStyles();
+  let result=[
+  createData('Postpaid Siebel','UP','DOWN','DOWN','UP','UP'),
+  createData('Postpaid','UP','DOWN','DOWN','UP','UP'),
+  createData('Payments Bank','UP','DOWN','DOWN','UP','UP'),
+  createData('HR','UP','DOWN','DOWN','UP','UP'),
+  createData('Prepaid','UP','DOWN','DOWN','UP','UP'),
+
+  ];
+
+  //%%%%%%%%%%%%%%%%%%%
+  async function healthCheck(){
+            let res =  await fetch('http://10.5.205.104:8080/trainer/getHealthCheckStatus', {
+                method: 'get',
+                headers: {
+                    'Accept': '*/*',
+                },
+                
+            });
+            //console.log(res);
+
+            result = await res.json();
+
+            console.log(result);
+
+  }
+  {console.log(result)}
 
   return (
-    <div>
+        <div>
     <Typography  variant="h3" gutterBottom className={classes.headline}>
         Health Check Status
     </Typography>
@@ -80,8 +104,8 @@ export default function CustomizedTables() {
 
     <Divider className={classes.line}/>
 
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
+    <TableContainer component={Paper} className={classes.table}>
+      <Table  aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Bot Name</StyledTableCell>
@@ -93,26 +117,27 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {result.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
                 {row.Bot_Name}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.Bot_Status}</StyledTableCell>
+              <StyledTableCell align="right">{row.status}</StyledTableCell>
               <StyledTableCell align="right">{row.DT}</StyledTableCell>
               <StyledTableCell align="right">{row.AI}</StyledTableCell>
-              <StyledTableCell align="right">{row.Elastic_Search}</StyledTableCell>
-              <StyledTableCell align="right">{row.Config}</StyledTableCell>
+              <StyledTableCell align="right">{row.AutoSuggest}</StyledTableCell>
+              <StyledTableCell align="right">{row.welcomeConfig}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
 
-    <Button style={{textTransform:"capitalize",position:"relative",top:-30,left:70}} variant="contained" color="primary" disableElevation >
+    <Button style={{textTransform:"capitalize",position:"relative",top:-370,left:400}} variant="contained" color="primary" disableElevation >
       Refresh
     </Button>
 
     </div>
+
   );
 }

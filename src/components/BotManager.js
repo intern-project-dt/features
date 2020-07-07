@@ -391,6 +391,19 @@ const CSSTextField = withStyles({
 
             
             <br />
+            <div className={classes.root} style={{  position:"relative", left:-10, top:60}}>
+           <input
+            accept="image/*"
+            className={classes.input}
+            id="contained-button-file"
+            multiple
+            type="file"
+          />
+          <label htmlFor="contained-button-file">
+            
+          </label>
+        
+        </div>
             <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}
             onClick={createBot}>
                 Save

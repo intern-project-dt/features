@@ -191,7 +191,7 @@ const CSSTextField = withStyles({
   function InputTextField(props) {
     const classes = useStyles();
     const [showTable, setShowTable] = React.useState(true);
-    let result=[{"scenarioName":"sc1","score":5},{"scenarioName":"sc2","score":6}];
+    let result=[];
     const handleChange = (action,input) => {
       switch(action){
         case "QUERY_IN" :  
@@ -216,14 +216,7 @@ const CSSTextField = withStyles({
         //  
         let res =  await fetch('http://10.5.205.104:8080/trainer/getBotIntentJson/{props.botName}', {
                 method: 'post',
-                headers: {
-                    'Accept': 'text/plain',
-                    'Content-Type': 'text/plain'
-                },
-                body: JSON.stringify({
-                    query:props.query,
-                    botAccessToken:props.botName
-                })
+                
             });
             console.log("hey");
             result =await res.json();
@@ -320,7 +313,7 @@ const CSSTextField = withStyles({
             </form>
            
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:450, top:170}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:330, top:-220}}
             onClick={genIntents}>
                 Generate
             </BootstrapButton>
@@ -333,7 +326,7 @@ const CSSTextField = withStyles({
             </div>
 
             
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:440, top:55}}>
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:340, top:135}}>
                 Toggle View
             </BootstrapButton>
             <br />
