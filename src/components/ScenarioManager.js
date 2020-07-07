@@ -13,9 +13,9 @@ import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import { ScenarioManagerActionType } from "../action-types/scenario-manager.actiontype";
 import { connect } from "react-redux";
-import {ScenarioManagerActionType} from "../action-types/scenario-manager.actiontype"
-import * as ScenarioActions from "../actions/scenario-manager.action"
+import * as ScenarioManager from "../actions/scenario-manager.action"
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -25,44 +25,44 @@ const useStyles = makeStyles((theme) => ({
       height: 30,
       alignItems: "left",
       position:"relative",
-      top: 50,
-      left: -320,
+      top: 10,
+      left: -420,
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
     heading :{
       position:"relative",
-      top: -5,
+      top: -10,
       left: -540,
       fontFamily: "Segoe UI"
     },
     line :{
       position:"relative",
-      top: -5,
+      top: -10,
       width: 900,
       left: -250,
-      height: 3,
+      height: 2,
       backgroundColor:"black"
     },
     heading1 :{
       position:"relative",
-      top: 750,
-      left: 670,
+      top: 110,
+      left: -250,
       fontFamily: "Segoe UI"
     },
     line1 :{
       position:"relative",
-      top: 70,
+      top: 110,
       width: 900,
-      left: 870,
+      left: 180,
       height: 2,
       backgroundColor:"black"
     },
     field1 :{
       position:"relative",
       top: 1880,
-      left: 710,
+      left: 10,
       
     },
   }));
@@ -72,6 +72,8 @@ const BootstrapInput = withStyles((theme) => ({
   root: {
     'label + &': {
       marginTop: theme.spacing(3),
+      position: 'relative',
+      top: 45,
     },
   },
   input: {
@@ -110,9 +112,12 @@ const BootstrapInput = withStyles((theme) => ({
 const CSSTextField = withStyles({
   root: {
     width: 205,
-    height: 20,
-    padding: '15px 0px',
+    padding: '10px 0px',
+    position: 'relative',
+    top: -70,
+    left: 1,
       },
+
   
   
 })(TextField);
@@ -124,13 +129,13 @@ const CSSTextField = withStyles({
       fontSize: 16,
       position: 'relative',
       top: 20,
-      left: 1050,
+      left: 330,
       padding: '6px 12px',
       border: '1px solid',
       lineHeight: 1.5,
       align: 'center',
-      backgroundColor: '#0063cc',
-      borderColor: '#0063cc',
+      backgroundColor: '#0367fc',
+      borderColor: '#0367fc',
       
       fontFamily: [
         '-apple-system',
@@ -159,269 +164,324 @@ const CSSTextField = withStyles({
       },
     },
   })(Button);
-  function SimpleSelect(props) {
+  
+  function InputTextField(props) {
     const classes = useStyles();
-
-    /*const handleChange = (event,action) => {
-      //setAge(event.target.value);
-      handleInput(action,event.target.value);
-    };
-    */
-
-    const handleInput = (action,age) => {
+    const handleChange = (action,input) => {
       switch(action){
-        case "EDITSCENARIO_IN" :  
-          props.dispatch(ScenarioActions.inputEditSC(age));
+        case "SCEDIT_IN" :  
+          props.dispatch(ScenarioManager.inputEditSC(input));
           break;
-
-        case "SC_NAME_IN" :
-          props.dispatch(ScenarioActions.inputSCName(age));
-          break;          
+  
+        case "SC_NAME" :
+          props.dispatch(ScenarioManager.inputEditSC(input));
+          break;   
         
-        case "SC_ID_IN" :
-          props.dispatch(ScenarioActions.inputSCId(age));
-        break;
-
-        case "SC_STRAT_IN" :
-          props.dispatch(ScenarioActions.inputSCStrat(age));
-        break;
-        
-        case "IS_MSISDN_IN" :
-          props.dispatch(ScenarioActions.inputMSISDN(age));
-        break;
-
-        case "IS_FB_IN" :
-          props.dispatch(ScenarioActions.inputFB(age));
+  
+        case "ID_IN" :
+          props.dispatch(ScenarioManager.inputSCId(input));
+          break; 
+        case "STRAT_IN" :  
+          props.dispatch(ScenarioManager.inputSCStrat(input));
           break;
-        
-        case "SC_RESP_IN" :
-          props.dispatch(ScenarioActions.inputResp(age));
+  
+        case "LOB_IN" :
+          props.dispatch(ScenarioManager.inputSCLOB(input));
+          break; 
+        case "MSISDN_IN" :  
+          props.dispatch(ScenarioManager.inputMSISDN(input));
           break;
-        
-        case "SC_REMOVE" :
-          props.dispatch(ScenarioActions.inputRemovalScenario(age));
+  
+        case "FB_IN" :
+          props.dispatch(ScenarioManager.inputFB(input));
+          break;  
+        case "RESP_IN" :  
+          props.dispatch(ScenarioManager.inputResp(input));
           break;
+  
+        case "REMSC_IN" :
+          props.dispatch(ScenarioManager.inputRemovalScenario(input));
+          break;                       
+     
+        }
+      };
 
-        case "SC_LOB_IN" :
-          props.dispatch(ScenarioActions.inputSCLOB(age));          
-          break;
-         
-      }
-    };
+          async function saveScenario(){
+              let res = await fetch('http://10.5.205.104:8080/trainer/saveScenario', {
+                method: 'post',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    scenario:{
+                      scenarioId:props.scenarioId,
+                      scenarioName:props.scenarioName,
+                      scenarioStrategy:props.scenarioStrat,
+                      scenarioLob:props.scenarioLOB,
+                      scenarioResponse:props.scenarioResp,
+                      msisdnRequired:props.reqMSISDN,
+                      feedbackRequired:props.reqFeedback,
+                      scenarioStep:null,
+                      scenarioIntent:null
+                    }
+                })
+            });
 
+            let result = await res.json();
 
-    const handleButton=(action,obj) =>{
-      switch(action){
-        case "SAVE_SC" :
-          props.dispatch(ScenarioActions.saveScenario(obj));
-        case "LOAD_SC" :
-          props.dispatch(ScenarioActions.loadScenario(obj));
-        case "REMOVE_SC" :
-          props.dispatch(ScenarioActions.removeScenario(obj));
-      }
+            if(result.status==200)
+              console.log("correct");
+            else
+              console.log("wrong");    
+
     }
+
+    async function loadScenario(){
+
+    }
+
+    async function remScenario(){
+      let res = await fetch('http://10.5.205.104:8080/trainer/removeScenario?name={props.scenarioRemove}', {
+                method: 'get',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json'
+                },
+                
+            });
+
+        let result =await res.json();      
+      
+    }
+
 
     return (
         <div className="forms">
         <Typography variant="h3" className={classes.heading}>
               Manage Scenario
-        </Typography>
+            </Typography>
     
-        <Divider className={classes.line}/>
+            <Divider className={classes.line}/>
+        
+
+        
         <FormControl variant="outlined" className={classes.formControl}>
             <div className= "ManageBot">
             
-            <InputLabel id="demo-customized-select-label"></InputLabel><div className= "field"> Select Scenario to Edit:</div> 
-            <div className="block"> 
-                <Select style={{width:200}}
+            
+              
+            
+            
+                <div className= "field">  
+                
+                <p> <div className="field1" style={{ position: "relative", left:2, top:-10 }} >Select Scenario to Edit:  </div> </p>
+                <div className="block"><Select style={{width:200, position: "relative", top:-40}}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
                 value={props.scenarioEditted}
-                onChange={(e)=>handleInput("EDITSCENARIO_IN",e.target.value)}
+                onChange={(e)=>handleChange("SCEDIT_IN",e.target.value)}
                 >
                           <MenuItem value="DEFAULT">DEFAULT</MenuItem>
                           <MenuItem value="EXTERNAL">EXTERNAL</MenuItem>
                           <MenuItem value="NATIVE">NATIVE</MenuItem>
                           <MenuItem value="GRAPH">GRAPH</MenuItem>
                 </Select>
-                </div>
-            </div>
-
-            <form className={classes.root} noValidate autoComplete="off">
-                <div className= "field">  
-                <TextField id="outlined-basic" label="" variant="outlined" value={props.scenarioName} 
-                onChange={(e)=>handleInput("SC_NAME_IN",e.target.value)}
-                />
+                   </div>
                 
-                <p>Enter Scenario Name:</p>
+                
                 </div>
                 
-            </form>
             <form className={classes.root} noValidate autoComplete="off">
                 <div className= "field"> 
-                <div className="block"><CSSTextField id="outlined-basic" label="" variant="outlined" value={props.scenarioId} 
-                onChange={(e)=>handleInput("SC_ID_IN",e.target.value)}
-                /> </div>
-                <p>Enter Scenario ID: </p>
+                
+                <p> <div className="field1" style={{ position: "relative", left:5, top:-10}}> Enter Scenario Name:  </div> </p>
+                <div className="block"> <CSSTextField style={{height: 30, position: "relative", left:2, top:-50}}
+                    id="filled-secondary"
+                    variant="filled"
+                    color="secondary"
+                    value={props.scenarioName}
+                    onChange={(e)=>handleChange("SC_NAME",e.target.value)}
+                  />
+                   </div>
                 </div>
             </form>
             
-            <InputLabel id="demo-customized-select-label">   </InputLabel><div className= "field"> Select Scenario Strategy: 
-            <div className="block"> 
-                <Select
-                labelId="demo-customized-select-label"
-                id="demo-customized-select"
-                value={props.scenarioStrat}
-                onChange={(e)=>handleInput("SC_STRAT_IN",e.target.value)}
-                input={<BootstrapInput />}
-              >
-                          <MenuItem value="DTScenario">
-                          DTScenario
-                          </MenuItem>
-                          <MenuItem value="FAQSenario">FAQScenario</MenuItem>
-                          <MenuItem value="SwitchScenario">SwitchScenario</MenuItem>
-                      </Select>
-                </div>
+            <p><div className="field1" style={{ position: "relative", left:25, top:20}}> Enter Scenario ID: </div></p>
+            <CSSTextField style={{height: 30, position: "relative", left:330, top:-15}}
+                    id="filled-secondary"
+                    variant="filled"
+                    color="secondary"
+                    value={props.scenarioId}
+                    onChange={(e)=>handleChange("SC_NAME",e.target.value)}
+                  />
+            
+              
               </div>
             
-              <InputLabel id="demo-customized-select-label">   </InputLabel><div className= "field"> Select Scenario LOB: 
-                <div className="block"> 
-                    <Select
-                    labelId="demo-customized-select-label"
-                    id="demo-customized-select"
-                    value={props.scenarioLOB}
-                    onChange={(e)=>handleInput("SC_LOB_IN",e.target.value)}
-                    input={<BootstrapInput />}
-                  >
-                              <MenuItem value="PostPaid">PostPaid</MenuItem>
-                              <MenuItem value="PrePaid">PrePaid</MenuItem>
-                              <MenuItem value="DTH">DTH</MenuItem>
-                              <MenuItem value="Telemedia">Telemedia</MenuItem>
-                              <MenuItem value="HR">HR</MenuItem>
-                              <MenuItem value="PaymentBanks">PaymentsBank</MenuItem>
-                          </Select>
-                    </div>
-                  </div>
-                  <InputLabel id="demo-customized-select-label">   <div className= "field"> MSISDN Required:
-                  <div className="block"> 
-                      <Select
-                      labelId="demo-customized-select-label"
-                      id="demo-customized-select"
-                      value={props.reqMSISDN}
-                      onChange={(e)=>handleInput("IS_MSISDN_IN",e.target.value)}
-                      input={<BootstrapInput />}
+              <p><div className= "field1" style={{ position: "relative", left:27, top:20}}> Select Scenario Strategy: 
+              </div></p>
+              <div className="block"> 
+
+              <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
+              <Select style={{width:205, height: 50, position: "relative", left:247, top:-5}}
+                native
+                value={props.scenarioStrat}
+                onChange={(e)=>handleChange("STRAT_IN",e.target.value)}
+                inputProps={{
+                  name: 'lob',
+                  id: 'filled-lob-native-simple',
+                }}
+              >
+                      <option value={"DTScenario"}>DTScenario</option>
+                      <option value={"FAQScenario"}>FAQScenario</option>
+                      <option value={"SwitchScenario"}>SwitchScenario</option>
+              </Select>
+              </div>
+              <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Select Scenario LOB:  </div> </p>
+              <div className="block"> 
+                    <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
+                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                      native
+                      value={props.scenarioLOB}
+                      onChange={(e)=>handleChange("LOB_IN",e.target.value)}
+                      inputProps={{
+                        name: 'msisdn',
+                        id: 'filled-msisdn-native-simple',
+                      }}
                     >
-                                <MenuItem value="True">
-                          True
-                      </MenuItem>
-                      <MenuItem value="False">False</MenuItem>
-                            </Select>
-                      </div>
+                      <option aria-label="None" value="" />
+                      <option value={"Postpaid"}>Postpaid</option>
+                      <option value={"Prepaid"}>Prepaid</option>
+                      <option value={"DTH"}>DTH</option>
+                      <option value={"Telemedia"}>Telemedia</option>
+                      <option value={"HR"}>HR</option>
+                      <option value={"PaymentsBank"}>PaymentsBank</option>
+                    </Select>
                     </div>
-                    </InputLabel>
-                    <InputLabel id="demo-customized-select-label">   </InputLabel><div className= "field"> Feedback Required:
+              <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> MSISDN Required:  </div> </p>
+              <div className="block"> 
+                    <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
+                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                      native
+                      value={props.reqMSISDN}
+                      onChange={(e)=>handleChange("MSISDN_IN",e.target.value)}
+                      inputProps={{
+                        name: 'msisdn',
+                        id: 'filled-msisdn-native-simple',
+                      }}
+                    >
+                      <option aria-label="None" value="" />
+                      <option value={"True"}>True</option>
+                      <option value={"False"}>False</option>
+                    </Select>
+                    
+                  </div>
+                  <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Feedback Required:  </div> </p>
+              <div className="block"> 
+                    <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
+                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                      native
+                      value={props.reqFeedback}
+                      onChange={(e)=>handleChange("FB_IN",e.target.value)}
+                      inputProps={{
+                        name: 'msisdn',
+                        id: 'filled-msisdn-native-simple',
+                      }}
+                    >
+                      <option aria-label="None" value="" />
+                      <option value={"True"}>True</option>
+                      <option value={"False"}>False</option>
+                    </Select>
+
+                      <p> <div className = "field1" style={{ position: "relative", left:-130, top:20}} >Enter Scenario Response: </div></p>
+                        <InputLabel id="demo-customized-select-label">   </InputLabel><div className= "field"> 
+                        
                       <div className="block"> 
-                            <Select
-                            labelId="demo-customized-select-label"
-                            id="demo-customized-select"
-                            value={props.reqFeedback}
-                            onChange={(e)=>handleInput("IS_FB_IN",e.target.value)}
-                            input={<BootstrapInput />}
-                          >
-                                      <MenuItem value="True">
-                                True
-                            </MenuItem>
-                            <MenuItem value="False">False</MenuItem>
-                                  </Select>
-                            </div>
+                      
+                          <CSSTextField style={{width:205, height: 50, position: "relative", left:5, top:-40}}
+                          id="filled-secondary"
+                          variant="filled"
+                          color="secondary"
+                          value={props.scenarioResp}
+                    onChange={(e)=>handleChange("RESP_IN",e.target.value)}
+                        />
                         </div>
+
+                      
+
+                              
+                    </div>
             
+
 
             
 
-            <form className={classes.root} noValidate autoComplete="off">
-                <div className= "field">  
-                    <div className="block"><CSSTextField id="outlined-basic" label="" variant="outlined" value={props.scenarioResp}                                               
-                     onChange={(e)=>handleInput("SC_RESP_IN",e.target.value)}
-                    /> </div>
-                    <p>Enter Scenario Response:</p>
-                </div>
-            </form> 
             
-
-            
-
-            <form className={classes.root} noValidate autoComplete="off">
-                <div className= "field">  
-                    <div className="block"><CSSTextField id="outlined-basic" label="" variant="outlined" /> </div>
-                    <p>Enter Bot Classify Score:</p>
-                </div>
-            </form>
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} onClick={()=>handleButton("SAVE_SC",props)}>
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}
+            onClick={saveScenario}>
                 Save
             </BootstrapButton>
-
             &emsp; &emsp;
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} onClick={()=>handleButton("LOAD_SC",props)}>
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}>
                 Load
             </BootstrapButton>
-          
             <br />
             <div className= "DeleteBot">
-            <Typography variant="h3" className={classes.heading1} onClick={()=>handleButton("REMOVE_SC",props)}>
-              Remove Scenario
+            <Typography variant="h3" className={classes.heading1}>
+              Delete Bot
             </Typography>
         
             <Divider className={classes.line1}/>
             <br /> <br /> <br /> <br /> <br />
-            <InputLabel id="demo-simple-select-outlined-label">   </InputLabel>
             <div className= "field1">  
-                <div className="block">
-                    <Select 
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={props.scenarioRemove}
-                    onChange={(e)=>handleInput("SC_REMOVE",e.target.value)}
-                    label=""
+            
+                <br /> <br />
+                <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Feedback Required:  </div> </p>
+              <div className="block"> 
+                    <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
+                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                      native
+                      value={props.scenarioRemove}
+                      onChange={(e)=>handleChange("USER_IN",e.target.value)}
+                      inputProps={{
+                        name: 'msisdn',
+                        id: 'filled-msisdn-native-simple',
+                      }}
                     >
-                    <MenuItem value="True">
-                        True
-                    </MenuItem>
-                    <MenuItem value="False">False</MenuItem>
+                      <option aria-label="None" value="" />
+                      <option value={"True"}>True</option>
+                      <option value={"False"}>False</option>
                     </Select>
-                </div>
-                Select Scenario to Delete: 
+                
+                        </div>
             </div>
             <br/>
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin}>
-                Delete Scenario
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:350, top:20}}
+            onClick={remScenario}>
+                Delete Bot
             </BootstrapButton>
             </div>
-          </FormControl>
-
-            
-
-
+            </div>
+      </FormControl>
         </div>
     );
   }
 
-
-  function mapStatetoProps(state){
-    return{
-      scenarioEditted:state.scenarioManager.scenarioEditted,
-      scenarioName:state.scenarioManager.scenarioName,
-      scenarioId:state.scenarioManager.scenarioId,
-      scenarioStrat:state.scenarioManager.scenarioStrat,
-      scenarioLOB:state.scenarioManager.scenarioLOB,
-      reqMSISDN:state.scenarioManager.reqMSISDN,
-      reqFeedback:state.scenarioManager.reqFeedback,
-      scenarioResp:state.scenarioManager.scenarioResp,
-      scenarioRemove:state.scenarioManager.scenarioRemove
-    };
+  function mapStateToProps(state) {
+      return{
+        scenarioEditted:state.scenarioManager.scenarioEditted,
+        scenarioName:state.scenarioManager.scenarioName,
+        scenarioId:state.scenarioManager.scenarioId,
+        scenarioStrat:state.scenarioManager.scenarioStrat,
+        scenarioLOB:state.scenarioManager.scenarioLOB,
+        reqMSISDN:state.scenarioManager.reqMSISDN,
+        reqFeedback:state.scenarioManager.reqFeedback,
+        scenarioResp:state.scenarioManager.scenarioResp,
+        scenarioRemove:state.scenarioManager.scenarioRemove
+      };
   }
   
-  export default connect(mapStatetoProps)(SimpleSelect)
-
+  export default connect(mapStateToProps)(InputTextField);

@@ -190,8 +190,8 @@ const CSSTextField = withStyles({
   
   function InputTextField(props) {
     const classes = useStyles();
-      const [showTable, setShowTable] = React.useState(true);
-
+    const [showTable, setShowTable] = React.useState(true);
+    let result=[{"scenarioName":"sc1","score":5},{"scenarioName":"sc2","score":6}];
     const handleChange = (action,input) => {
       switch(action){
         case "QUERY_IN" :  
@@ -214,22 +214,19 @@ const CSSTextField = withStyles({
         //setShowTable(true);
         //if(showTable)
         //  
-        let res =  await fetch('http://10.5.205.104:8080/trainer/getBotIntent/{props.botName}', {
+        let res =  await fetch('http://10.5.205.104:8080/trainer/getBotIntentJson/{props.botName}', {
                 method: 'post',
                 headers: {
                     'Accept': 'text/plain',
                     'Content-Type': 'text/plain'
                 },
                 body: JSON.stringify({
-                    text:props.query,
+                    query:props.query,
                     botAccessToken:props.botName
                 })
             });
-
-            let result =await res.json();
-            return <scenarioTable result={result}/>
-
-            console.log(result);
+            console.log("hey");
+            result =await res.json();
 
       };
 
@@ -277,7 +274,7 @@ const CSSTextField = withStyles({
              Enter User Query Text: 
                 </div> 
                 </p>
-                <div className="block"><CSSTextField style={{height: 30, position: "relative", left:2, top:-60} }
+                <div className="block"><CSSTextField style={{height: 30, position: "relative", left:-200, top:-60} }
                     id="filled-secondary"
                     variant="filled"
                     color="secondary"
@@ -323,14 +320,20 @@ const CSSTextField = withStyles({
             </form>
            
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:530, top:170}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:450, top:170}}
             onClick={genIntents}>
                 Generate
             </BootstrapButton>
+            <div style={{ position: "relative", left:420, top:-350}}>
+            {
+              result.map((row)=>(
+                <><div style={{left:500,top:500}}>{row.scenarioName}      &emsp;  &emsp; &emsp;    {row.score}</div><br /></>
+              ))
+            }
+            </div>
 
             
-            &emsp; &emsp;
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:530, top:170}}>
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:440, top:55}}>
                 Toggle View
             </BootstrapButton>
             <br />
