@@ -103,35 +103,25 @@ const useStyles = makeStyles((theme) => ({
     const classes = useStyles();
     
     async function trainBot(){
-          let res =  await fetch('http://10.5.205.104:8080/trainer/trainBot/{props.selectedBot}', {
-                method: 'post',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                })
-            });
+      let res =  await fetch('http://10.5.205.104:8080/trainer/trainBot/{props.selectedBot}', {
+        method: 'get'
+        
+    });
 
-            let result = await res.json();
-
-            console.log(result.resultMessage);
+    let result = await res.json();
+    alert("Training Successful");
+    console.log(result.resultMessage);
 
     }
     async function makeBotLive(){
-          let res =  await fetch('http://10.5.205.104:8080/trainer/makeBotLive/{props.selectedBot}', {
-                method: 'post',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                })
-            });
+      let res =  await fetch('http://10.5.205.104:8080/trainer/makeBotLive/{props.selectedBot}', {
+        method: 'get'
+        
+    });
 
-            let result = await res.json();
+    let result = await res.json();
 
-            console.log(result.resultMessage);
+    console.log(result.resultMessage); 
 
     }
 

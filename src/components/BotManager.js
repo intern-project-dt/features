@@ -203,41 +203,37 @@ const CSSTextField = withStyles({
 
 
         async function createBot(){
-      let res = await fetch('http://10.5.205.104:8080/trainer/createNewBot', {
-                method: 'post',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
+          let res = await fetch('http://10.5.205.104:8080/trainer/createNewBot', {
+            method: 'post',
+            headers: {
+                'Accept': '*/*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                botProfile:{
+                    botName:props.botName,
+                    botAccessToken:props.botToken,
+                    classifyStrategy:props.botStrategy,
+                    algorithm:props.botAlgorithm,
+                    botScore:props.botScore,
+                    logMsisdn:props.botMsisdn,
                 },
-                body: JSON.stringify({
-                    profile:{
-                        botName:props.botName,
-                        botAccessToken:props.botToken,
-                        algorithm:props.botAlgorithm,
-                        classifyStrategy:props.botStrategy,
-                        logMsisdn:props.botMsisdn,
-                        botScore:props.botScore,
-                        botLive:null,
-                        botScenarioList:null
-                    }
-                })
-            });
+                trainFile:null
+            })
+        });
 
-            let result =await  res.json();
+        let result =await  res.json();
 
-            if(result.resultMessage=="Saved")
-              props.dispatch(TopBarActions.addBot(props.botName));
+        if(result.resultMessage=="Saved")
+          props.dispatch(TopBarActions.addBot(props.botName));
 
-            console.log(result.resultMessage);
+        console.log(result.resultMessage); 
     }
 
     async function deleteBot(){
       let res = await fetch('http://10.5.205.104:8080/trainer/deleteBot/{props.selectedBot}', {
-                method: 'get',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
+                method: 'get'
+                
                 
             });
 
@@ -246,12 +242,10 @@ const CSSTextField = withStyles({
             if(result.resultMessage=="Saved")
               props.dispatch(TopBarActions.removeBot(props.selectedBot));
 
-            console.log(result.resultMessage);  
+            console.log(result.resultMessage);
     }
 
-    async function loadBot(){
-        
-    }
+    
 
 
 

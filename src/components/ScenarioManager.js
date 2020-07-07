@@ -207,33 +207,25 @@ const CSSTextField = withStyles({
       };
 
           async function saveScenario(){
-              let res = await fetch('http://10.5.205.104:8080/trainer/saveScenario', {
-                method: 'post',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    scenario:{
-                      scenarioId:props.scenarioId,
-                      scenarioName:props.scenarioName,
-                      scenarioStrategy:props.scenarioStrat,
-                      scenarioLob:props.scenarioLOB,
-                      scenarioResponse:props.scenarioResp,
-                      msisdnRequired:props.reqMSISDN,
-                      feedbackRequired:props.reqFeedback,
-                      scenarioStep:null,
-                      scenarioIntent:null
-                    }
-                })
-            });
+            let res = await fetch('http://10.5.205.104:8080/trainer/saveScenario', {
+              method: 'post',
+              headers: {
+                  'Accept': '*/*',
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                    scenarioName:props.scenarioName,
+                    scenarioId:props.scenarioId,
+                    scenarioStrategy:props.scenarioStrat,
+                    scenarioResponse:props.scenarioResp,
+                    msisdnRequired:props.reqMSISDN,
+                    feedbackRequired:props.reqFeedback,
+                    scenarioLob:props.scenarioLOB,
+              })
+          });
 
-            let result = await res.json();
+          let result = await res.json();
 
-            if(result.status==200)
-              console.log("correct");
-            else
-              console.log("wrong");    
 
     }
 
@@ -243,15 +235,13 @@ const CSSTextField = withStyles({
 
     async function remScenario(){
       let res = await fetch('http://10.5.205.104:8080/trainer/removeScenario?name={props.scenarioRemove}', {
-                method: 'get',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
+                method: 'get'
                 
             });
 
-        let result =await res.json();      
+
+        let result =await res.json();  
+                  alert("Scenario Removed");      
       
     }
 
@@ -446,8 +436,8 @@ const CSSTextField = withStyles({
             </BootstrapButton>
             <br />
             <div className= "DeleteBot">
-            <Typography variant="h3" className={classes.heading1}>
-              Delete Bot
+            <Typography variant="h3" className={classes.heading1} style={{ position: "relative", left:-100, top:20}}>
+              Remove Scenario
             </Typography>
         
             <Divider className={classes.line1}/>
@@ -461,7 +451,7 @@ const CSSTextField = withStyles({
                     <Select style={{width:205, height: 50, position: "relative", left:10, top:-10}}
                       native
                       value={props.scenarioRemove}
-                      onChange={(e)=>handleChange("USER_IN",e.target.value)}
+                      onChange={(e)=>handleChange("REMSC_IN",e.target.value)}
                       inputProps={{
                         name: 'msisdn',
                         id: 'filled-msisdn-native-simple',
@@ -478,7 +468,7 @@ const CSSTextField = withStyles({
             <br />
             <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:550, top:40}}
             onClick={remScenario}>
-                Delete Bot
+                Remove 
             </BootstrapButton>
             </div>
             </div>

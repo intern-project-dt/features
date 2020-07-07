@@ -155,74 +155,69 @@ function InputTextField(props) {
     const classes = useStyles();
     
     async function downloadReport(){
-                  let res =  await fetch('http://10.5.205.104:8080/trainer/getValidationReport', {
-                method: 'get',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                
-            });
-            //console.log(res);
+      let res =  await fetch('http://10.5.205.104:8080/trainer/getValidationReport', {
+        method: 'get',
+        headers: {
+            'Accept': '*/*',
+        },
+        
+    });
+    //console.log(res);
 
-            let result = await res.json();
+    let result = await res.json();
 
-            console.log(result);
-
+    console.log(result); 
     }
 
     async function cancelTest(){
-       let res =  await fetch('http://10.5.205.104:8080/trainer/cancelBotTest', {
-                method: 'get',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                
-            });
-            //console.log(res);
+      let res =  await fetch('http://10.5.205.104:8080/trainer/cancelBotTest', {
+        method: 'get',
+        headers: {
+            'Accept': '*/*',
+        },
+        
+    });
+    //console.log(res);
 
-            let result = await res.json();
+    let result = await res.json();
 
-            console.log(result);
+    console.log(result); 
 
     }
 
     async function testBot(){
-            let res =  await fetch('http://10.5.205.104:8080/trainer/validateBot/{props.botName}', {
-                method: 'post',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                body :{
-                  botAccessToken:props.botName,
-                  testFile:eclipsefile
-                }
-                
-            });
-            //console.log(res);
+      let res =  await fetch('http://10.5.205.104:8080/trainer/validateBot/{props.botName}', {
+        method: 'post',
+        headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json'
+        },
+        body :{
+          testFile:eclipsefile
+        }
+        
+    });
+    //console.log(res);
 
-            let result = await res.json();
+    let result = await res.json();
 
-            console.log(result);
+    console.log(result);
 
     }
 
     async function downloadJunk(){
-                    let res =  await fetch('http://10.5.205.104:8080/trainer/getJunkQueryData', {
-                method: 'get',
-                headers: {
-                    'Accept': '*/*',
-                    'Content-Type': 'application/json'
-                },
-                
-            });
-            //console.log(res);
+      let res =  await fetch('http://10.5.205.104:8080/trainer/getJunkQueryData', {
+        method: 'get',
+        headers: {
+            'Accept': '*/*',
+        },
+        
+    });
+    //console.log(res);
 
-            let result = await res.json();
+    let result = await res.json();
 
-            console.log(result);
+    console.log(result);
 
     }
 

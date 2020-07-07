@@ -79,18 +79,18 @@ export default function CustomizedTables() {
 
   //%%%%%%%%%%%%%%%%%%%
   async function healthCheck(){
-            let res =  await fetch('http://10.5.205.104:8080/trainer/getHealthCheckStatus', {
-                method: 'get',
-                headers: {
-                    'Accept': '*/*',
-                },
-                
-            });
-            //console.log(res);
+    let res =  await fetch('http://10.5.205.104:8080/trainer/getHealthCheckStatus', {
+      method: 'get',
+      headers: {
+          'Accept': '*/*',
+      },
+      
+  });
+  //console.log(res);
 
-            result = await res.json();
-
-            console.log(result);
+  result = await res.json();
+  console.log('Success');
+  console.log(result); 
 
   }
   {console.log(result)}
@@ -133,7 +133,7 @@ export default function CustomizedTables() {
       </Table>
     </TableContainer>
 
-    <Button style={{textTransform:"capitalize",position:"relative",top:-370,left:400}} variant="contained" color="primary" disableElevation >
+    <Button style={{textTransform:"capitalize",position:"relative",top:-370,left:400}} variant="contained" color="primary" disableElevation onClick={healthCheck}>
       Refresh
     </Button>
 

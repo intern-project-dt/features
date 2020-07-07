@@ -132,6 +132,8 @@ const CSSTextField = withStyles({
     position: 'relative',
     top: -70,
     left: 1,
+    height: 20,
+    fill: 'white',
       },
 
   
@@ -214,38 +216,40 @@ const CSSTextField = withStyles({
         //setShowTable(true);
         //if(showTable)
         //  
-        let res =  await fetch('http://10.5.205.104:8080/trainer/getBotIntentJson/{props.botName}', {
-                method: 'post',
-                
-            });
-            console.log("hey");
-            result =await res.json();
+        let res =  await fetch('http://10.5.205.104:8080/trainer/getBotIntentJson/{props.botName}?query={props.query}', {
+          method: 'get'
+      });
+    console.log("hey");
+    result =await res.json();
+
+      //return <scenarioTable result={result}/>
+
+      console.log(result);
 
       };
 
       async function mapIntents(){
-          let intentMapp=new Map();
-            intentMapp[props.botIntent]=props.botScenario;
-            let res = await fetch('http://10.5.205.104:8080/trainer/mapBotIntent/{props.botName}', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    botAccessToken:props.botName,
-                    intentMap:intentMapp
-                })
-            });
+        let intentMapp=new Map();
+        intentMapp[props.botIntent]=props.botScenario;
+        let res = await fetch('http://10.5.205.104:8080/trainer/mapBotIntent/{props.botName}', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                intentMap:intentMapp
+            })
+        });
 
-            let result =await res.json();
+        let result =await res.json();
 
-            if(result.resultMessage=="saved")
-              console.log("saved");
-            else
-              console.log("nope");
+        if(result.resultMessage=="Saved")
+          alert("Saved");
+        else
+          console.log("nope");
 
-            console.log(result);
+        console.log(result); 
 
       }
 
@@ -267,7 +271,7 @@ const CSSTextField = withStyles({
              Enter User Query Text: 
                 </div> 
                 </p>
-                <div className="block"><CSSTextField style={{height: 30, position: "relative", left:-200, top:-60} }
+                <div className="block"><CSSTextField style={{height: 10, position: "relative", left:-200, top:-60} }
                     id="filled-secondary"
                     variant="filled"
                     color="secondary"
