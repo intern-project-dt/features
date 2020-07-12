@@ -69,10 +69,13 @@ p{
   left: 150px;
   top: 10px;
 }
-
+.MuiTextField-root{
+  height: 50px;
+}
 .block{
   text-indent: 10em;
   float: right;
+  height: 50;
 }
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

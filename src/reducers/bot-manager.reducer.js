@@ -16,7 +16,7 @@ export default function BotManagerReducer(state = initialState, action){
 
         case BotManagerActionType.SET_BOT_NAME:
             return{
-                ...state, botName:action.botNAme
+                ...state, botName:action.botName
             };
 
         case BotManagerActionType.SET_BOT_TOKEN:

@@ -10,13 +10,11 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import BotManager from "./BotManager";
 import ScenarioManager from "./ScenarioManager";
-import BotTester from "./BotTester";
 import TrainBot from "./TrainBot";
 import HealthMain from "./HealthMain";
-import UnrecognizedMails from "./UnrecognizedMails";
 import TrainedDat from "./TrainedDat";
 import ReqAnalysisMain from "./ReqAnalysisMain";
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -42,8 +40,8 @@ export default function SelectedListItem() {
       <Link to={'/BotManager'} style={{textDecoration:"none",color:"inherit"}}>
         <ListItem
           button
-          selected={selectedIndex === 1}
-          onClick={(event) => handleListItemClick(event, 1)}
+          selected={selectedIndex === 0}
+          onClick={(event) => handleListItemClick(event, 0)}
         >
           <ListItemIcon>
             <InboxIcon />
@@ -55,8 +53,8 @@ export default function SelectedListItem() {
         <Link to={'/TrainedDat'} style={{textDecoration:"none",color:"inherit"}}>
         <ListItem
           button
-          selected={selectedIndex === 2}
-          onClick={(event) => handleListItemClick(event, 2)}
+          selected={selectedIndex === 1}
+          onClick={(event) => handleListItemClick(event, 1)}
         >
           <ListItemIcon>
             <InboxIcon />
@@ -68,8 +66,8 @@ export default function SelectedListItem() {
         <Link to={'/ScenarioManager'} style={{textDecoration:"none",color:"inherit"}}>
         <ListItem
           button
-          selected={selectedIndex === 3}
-          onClick={(event) => handleListItemClick(event, 3)}
+          selected={selectedIndex === 2}
+          onClick={(event) => handleListItemClick(event, 2)}
         >
           <ListItemIcon>
             <InboxIcon />
@@ -80,24 +78,13 @@ export default function SelectedListItem() {
 
       
 
-        <Link to={'/BotTester'} style={{textDecoration:"none",color:"inherit"}}>
-        <ListItem
-          button
-          selected={selectedIndex === 4}
-          onClick={(event) => handleListItemClick(event, 4)}
-        >
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Bot Tester" />
-        </ListItem>
-        </Link>
+  
 
         <Link to={'/TrainBot'} style={{textDecoration:"none",color:"inherit"}}>
         <ListItem
           button
-          selected={selectedIndex === 5}
-          onClick={(event) => handleListItemClick(event, 5)}
+          selected={selectedIndex === 3}
+          onClick={(event) => handleListItemClick(event, 3)}
         >
           <ListItemIcon>
             <InboxIcon />
@@ -106,26 +93,15 @@ export default function SelectedListItem() {
         </ListItem>
         </Link>
 
-        <Link to={'/UnrecognizedMails'} style={{textDecoration:"none",color:"inherit"}}>
-        <ListItem
-          button
-          selected={selectedIndex === 6}
-          onClick={(event) => handleListItemClick(event, 6)}
-        >
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Unrecognized Mails" />
-        </ListItem>
-        </Link>
+       
 
         
 
         <Link to={'/ReqAnalysisMain'} style={{textDecoration:"none",color:"inherit"}}>
         <ListItem
           button
-          selected={selectedIndex === 7}
-          onClick={(event) => handleListItemClick(event, 7)}
+          selected={selectedIndex === 4}
+          onClick={(event) => handleListItemClick(event, 4)}
         >
           <ListItemIcon>
             <InboxIcon />
@@ -137,8 +113,8 @@ export default function SelectedListItem() {
         <Link to={'/HealthMain'} style={{textDecoration:"none",color:"inherit"}}>
         <ListItem
           button
-          selected={selectedIndex === 8}
-          onClick={(event) => handleListItemClick(event, 8)}
+          selected={selectedIndex === 5}
+          onClick={(event) => handleListItemClick(event, 5)}
         >
           <ListItemIcon>
             <InboxIcon />
@@ -156,9 +132,7 @@ export default function SelectedListItem() {
               <Route exact path='/ScenarioManager' component={ScenarioManager} />
               <Route exact path='/BotManager' component={BotManager} />
               <Route exact path='/TrainedDat' component={TrainedDat} />
-              <Route exact path='/BotTester' component={BotTester} />
               <Route exact path='/TrainBot' component={TrainBot} />
-              <Route exact path='/UnrecognizedMails' component={UnrecognizedMails} />
               <Route exact path='/HealthMain' component={HealthMain} />
               <Route exact path='/ReqAnalysisMain' component={ReqAnalysisMain} />
           </Switch>

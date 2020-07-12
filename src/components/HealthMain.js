@@ -10,6 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import { connect } from "react-redux";
+import * as HealthMainActions from "../actions/health-main.action"
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -47,18 +49,18 @@ const useStyles = makeStyles({
     maxWidth: 900,
     position :"relative",
     left:400,
-    top:-400
+    top:-250
   },
   headline: {
     position: "relative",
-    top: -425,
-    left:400,
+    top: -285,
+    left:-200,
   },
   line :{
     position:"relative",
-    top: -420,
+    top: -300,
     width: 900,
-    left: 400,
+    left: 383,
     height: 2,
     backgroundColor:"black"
   }
@@ -66,34 +68,26 @@ const useStyles = makeStyles({
 
 
 
-export default function CustomizedTables() {
+function CustomizedTables(props) {
   const classes = useStyles();
-  let result=[
-  createData('Postpaid Siebel','UP','DOWN','DOWN','UP','UP'),
-  createData('Postpaid','UP','DOWN','DOWN','UP','UP'),
-  createData('Payments Bank','UP','DOWN','DOWN','UP','UP'),
-  createData('HR','UP','DOWN','DOWN','UP','UP'),
-  createData('Prepaid','UP','DOWN','DOWN','UP','UP'),
-
-  ];
 
   //%%%%%%%%%%%%%%%%%%%
   async function healthCheck(){
-    let res =  await fetch('http://10.5.205.104:8080/trainer/getHealthCheckStatus', {
-      method: 'get',
-      headers: {
-          'Accept': '*/*',
-      },
-      
-  });
-  //console.log(res);
+            let res =  await fetch('http://10.5.205.104:8080/trainer/getHealthCheckStatus', {
+              method: 'get',
+              headers: {
+                  'Accept': '/',
+              },
+            });
+            //let resulty=[{"DT":"DOWN","welcomeConfig":"UP","AI":"DOWN","name":"Payments Bank","AutoSuggest":"UP","status":"UP"},{"DT":"UP","welcomeConfig":"UP","AI":"UP","name":"Postpaid","AutoSuggest":"UP","status":"UP"},{"DT":"UP","welcomeConfig":"UP","AI":"UP","name":"Prepaid","AutoSuggest":"UP","status":"UP"},{"DT":"UP","welcomeConfig":"UP","AI":"UP","name":"HR","AutoSuggest":"DOWN","status":"UP"},{"DT":"UP","welcomeConfig":"UP","AI":"UP","name":"Postpaid Siebel","AutoSuggest":"UP","status":"UP"}];
 
-  result = await res.json();
-  console.log('Success');
-  console.log(result); 
+            let resultx = await res.json();
+            props.dispatch(HealthMainActions.fillTable(resultx));
+            console.log('Success');
+            //console.log(props.result);
 
   }
-  {console.log(result)}
+  //{console.log(result)}
 
   return (
         <div>
@@ -117,10 +111,10 @@ export default function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {result.map((row) => (
+          {props.result.map((row) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">
-                {row.Bot_Name}
+                {row.name}
               </StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
               <StyledTableCell align="right">{row.DT}</StyledTableCell>
@@ -133,7 +127,8 @@ export default function CustomizedTables() {
       </Table>
     </TableContainer>
 
-    <Button style={{textTransform:"capitalize",position:"relative",top:-370,left:400}} variant="contained" color="primary" disableElevation onClick={healthCheck}>
+    <Button style={{textTransform:"capitalize",position:"relative",top:70,left:400}} variant="contained" color="primary" disableElevation 
+    onClick={healthCheck}>
       Refresh
     </Button>
 
@@ -141,3 +136,10 @@ export default function CustomizedTables() {
 
   );
 }
+function mapStatetoProps(state){
+  return{
+    result:state.health.result,
+  };
+}
+
+export default connect(mapStatetoProps)(CustomizedTables)

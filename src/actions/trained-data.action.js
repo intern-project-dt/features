@@ -18,10 +18,20 @@ export function inputBotScenario(scIn){
     };
 }
 
-export function generateIntents(Querry,BotName){
-    return {type: TrainedDataActionType.GENERATE,
-    		query:Querry,
-    		BotName:BotName	
+export function setResult(resultval){
+    return {type: TrainedDataActionType.SET_RESULT,
+            result:resultval
     };
 }
 
+export function setScList(resultval){
+    return {type: TrainedDataActionType.SET_SCLIST,
+            scList:resultval
+    };
+}
+
+export function setInList(resultval){
+    return {type: TrainedDataActionType.SET_INLIST,
+            inList:resultval
+    };
+}

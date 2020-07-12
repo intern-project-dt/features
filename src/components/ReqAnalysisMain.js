@@ -25,40 +25,40 @@ const useStyles = makeStyles((theme) => ({
   box1: {
     height: 100,
     position: "relative",
-    top: -380,
+    top: -300,
     left: 30
   },
 
   box2: {
     height: 100,
     position: "relative",
-    top: -150,
+    top: -100,
     left: 40
   },
 
   Encrypt: {
     position: "relative",
-    top: -372,
-    left: 110,
+    top: -302,
+    left: 70,
     textTransform: "capitalize"
   },
 
   Decrypt: {
     position: "relative",
-    top: 10,
-    left: 10,
+    top: 20,
+    left: -5,
     textTransform: "capitalize"
   },
 
   heading: {
     position: "relative",
-    top: -390,
+    top: -300,
     left: -130,
     fontFamily: "Segoe UI"
   },
   line: {
     position: "relative",
-    top: -390,
+    top: -300,
     width: 900,
     left: 375,
     height: 2,
@@ -96,6 +96,22 @@ function InputTextField(props) {
     props.dispatch(ReqAna.inputDecrypted(encryptedData.toString()));
   }
 
+  function decryptdata() {
+
+    var decrypted = props.decrypted;
+    var CryptoJS = require("crypto-js");
+    var base64Key = "dHJhaW51c19hdXRoUGxheQ==";
+    var key = CryptoJS.enc.Base64.parse(base64Key);
+    var decryptedData = CryptoJS.AES.decrypt(decrypted, key, {
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    console.log(decryptedData.toString());
+    props.dispatch(ReqAna.inputEncrypted(decryptedData.toString()));
+  }
+
+  
+
   return (
     <div>
       <Grid container spacing={3}>
@@ -109,7 +125,7 @@ function InputTextField(props) {
 
           <form className={classes.root} noValidate autoComplete="off">
             <TextField multiline rows={10} className={classes.box1}
-              label="Enter Encryted Text" variant="filled"
+              label="Enter Text to be Encrypted" variant="filled"
               value={props.encrypted}
               onChange={(e) => handleChange("ENCRYPT_IN", e.target.value)}
             />
@@ -117,7 +133,7 @@ function InputTextField(props) {
             <TextField multiline rows={10}
               className={classes.box2}
               id="outlined-basic"
-              label="Enter Decryted Text"
+              label="Enter Text to be Decrypted"
               variant="filled"
               value={props.decrypted}
               onChange={(e) => handleChange("DECRYPT_IN", e.target.value)}
@@ -127,10 +143,10 @@ function InputTextField(props) {
         <Grid item md={12} sm={6}>
 
           <Button className={classes.Encrypt} variant="contained" color="secondary" onClick={encryptdata} >
-            Encrypt->Decrypt
+            Encrypt
     </Button>
-          <Button className={classes.Decrypt} variant="contained" color="secondary">
-            Decrypt->Encrypt
+          <Button className={classes.Decrypt} variant="contained" color="secondary" onClick={decryptdata}>
+            Decrypt
     </Button>
         </Grid>
 

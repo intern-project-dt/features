@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   line :{
     position:"relative",
-    top: -320,
+    top: -220,
     width: 900,
     left: 405,
     height: 2,
@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
       height: 50,
       position: 'relative',
       right: 180,
+      top: -150,
       padding: '6px 12px',
       border: '1px solid',
       lineHeight: 1.5,

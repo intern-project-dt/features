@@ -18,6 +18,7 @@ import { BotManagerActionType } from "../action-types/bot-manager.actiontype";
 import * as BotManagerActions from "../actions/bot-manager.action"
 import * as TopBarActions from "../actions/top-bar.action"
 import { TopBarActionTypes } from "../action-types/top-bar.actiontype";
+import { sizing } from '@material-ui/system';
 
 
 
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       minWidth: 150,
       float: "left",
-      height: 30,
+      height: 20,
       alignItems: "left",
       position:"relative",
       top: 10,
@@ -51,13 +52,13 @@ const useStyles = makeStyles((theme) => ({
     },
     heading1 :{
       position:"relative",
-      top: 110,
+      top: -40,
       left: -250,
       fontFamily: "Segoe UI"
     },
     line1 :{
       position:"relative",
-      top: 110,
+      top: -40,
       width: 900,
       left: 180,
       height: 2,
@@ -87,10 +88,10 @@ const BootstrapInput = withStyles((theme) => ({
     border: '1px solid #ced4da',
     fontSize: 16,
     width: 170,
-    height: 30,
-    paddingTop: 6,
+    height: 20,
+    paddingTop: 1,
     paddingRight: 12,
-    paddingBottom: 6,
+    paddingBottom: 1,
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     // Use the system font instead of the default Roboto font.
     fontFamily: [
@@ -116,12 +117,11 @@ const BootstrapInput = withStyles((theme) => ({
 const CSSTextField = withStyles({
   root: {
     width: 205,
-    padding: '10px 0px',
+    padding: '15px 2px',
     position: 'relative',
     top: -70,
     left: 1,
       },
-
   
   
 })(TextField);
@@ -202,36 +202,58 @@ const CSSTextField = withStyles({
     };
 
 
-        async function createBot(){
-          let res = await fetch('http://10.5.205.104:8080/trainer/createNewBot', {
-            method: 'post',
-            headers: {
-                'Accept': '*/*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                botProfile:{
-                    botName:props.botName,
-                    botAccessToken:props.botToken,
-                    classifyStrategy:props.botStrategy,
-                    algorithm:props.botAlgorithm,
-                    botScore:props.botScore,
-                    logMsisdn:props.botMsisdn,
-                },
-                trainFile:null
-            })
-        });
+    async function createBot(){
 
-        let result =await  res.json();
+      const myInput = document.getElementById('contained-button-file');
 
-        if(result.resultMessage=="Saved")
-          props.dispatch(TopBarActions.addBot(props.botName));
+let res = await fetch('http://10.5.205.104:8080/trainer/createNewBot', {
+  method: 'post',
+  headers: {
+      'Accept': '/',
+      'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+      botProfile:{
+          botName:props.botName,
+          botAccessToken:props.botToken,
+          classifyStrategy:props.botStrategy,
+          algorithm:props.botAlgorithm,
+          botScore:props.botScore,
+          logMsisdn:props.botMsisdn,
+      },
+      trainFile:myInput.files[0],
+  })
+});
 
-        console.log(result.resultMessage); 
-    }
+let result =await  res.json();
+
+if(result.resultMessage=="Saved")
+props.dispatch(TopBarActions.addBot(props.botName));
+
+console.log(result.resultMessage); 
+}
+
+async function loadBot(){
+fetch(`http://10.5.205.104:8080/trainer/fetch/getBotProfiles?liveBots=true`)
+.then(res=>res.json())
+.then(res=>{
+
+for(var bot in res){
+  if(res[bot].botName==props.selectedBot){
+    props.dispatch(BotManagerActions.inputBotName(res[bot].botName));
+    props.dispatch(BotManagerActions.inputBotToken(res[bot].botAccessToken));
+    props.dispatch(BotManagerActions.inputBotStrategy(res[bot].classifyStrategy));
+    props.dispatch(BotManagerActions.inputBotAlgorithm(res[bot].algorithm));
+    props.dispatch(BotManagerActions.inputBotMsisdn(res[bot].logMsisdn));
+    props.dispatch(BotManagerActions.inputBotScore(res[bot].botScore));
+  }
+}
+
+});
+}
 
     async function deleteBot(){
-      let res = await fetch('http://10.5.205.104:8080/trainer/deleteBot/{props.selectedBot}', {
+      let res = await fetch(`http://10.5.205.104:8080/trainer/deleteBot/${props.selectedBot}`, {
                 method: 'get'
                 
                 
@@ -268,8 +290,8 @@ const CSSTextField = withStyles({
             
                 <div className= "field">  
                 
-                <p> <div className="field1" style={{ position: "relative", left:2, top:-10 }} >Enter Bot Name:  </div> </p>
-                <div className="block"><CSSTextField style={{height: 30, position: "relative", left:2, top:-60}}
+                <p> <div className="field1" style={{ position: "relative", left:2, top:-25 }} >Enter Bot Name:  </div> </p>
+                <div className="block"><CSSTextField size="small" height={40} style={{ position: "relative", left:2, top:-80}}
                     id="filled-secondary"
                     variant="filled"
                     color="secondary"
@@ -284,12 +306,12 @@ const CSSTextField = withStyles({
             <form className={classes.root} noValidate autoComplete="off">
                 <div className= "field"> 
                 
-                <p> <div className="field1" style={{ position: "relative", left:5, top:-10}}> Enter Bot Access Token:  </div> </p>
-                <div className="block"> <CSSTextField style={{height: 30, position: "relative", left:2, top:-50}}
+                <p> <div className="field1" style={{ position: "relative", left:5, top:-45}}> Enter Bot Access Token:  </div> </p>
+                <div className="block"> <CSSTextField size="small" style={{height: 20, position: "relative", left:2, top:-103,  paddin:20 }}
                     id="filled-secondary"
                     variant="filled"
                     color="secondary"
-                                        value={props.botToken}
+                    value={props.botToken}
                     onChange={(e)=>handleChange("SET_BOT_TOKEN",e.target.value)}
 
                   />
@@ -297,9 +319,13 @@ const CSSTextField = withStyles({
                 </div>
             </form>
             
-            <p><div className="field1" style={{ position: "relative", left:25, top:20}}> Enter Bot Strategy: </div></p>
-        <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-            <Select style={{width:205, height: 50, position: "relative", left:327, top:-5}}
+            <p><div className="field1" style={{ position: "relative", left:25, top:-45}}> Enter Bot Strategy: </div></p>
+            <FormControl variant="filled" className={classes.formControl}>
+        
+        <InputLabel htmlFor="filled-strategy-native-simple"></InputLabel>
+        
+        
+            <Select style={{width:205, height: 48, position: "relative", left:1087, top:-107}}
               native
                             value={props.botStrategy}
                     onChange={(e)=>handleChange("SET_BOT_STRATEGY",e.target.value)}
@@ -314,19 +340,22 @@ const CSSTextField = withStyles({
               <option value={3}>Native</option>
               <option value={4}>Graph</option>
             </Select>
+            </FormControl>
+
               </div>
             
-              <p><div className= "field1" style={{ position: "relative", left:27, top:20}}> Enter Bot Algorithm Location: 
+              <p><div className= "field1" style={{ position: "relative", left:27, top:-60}}> Enter Bot Algorithm Location: 
               </div></p>
               <div className="block"> 
+              <FormControl variant="filled" className={classes.formControl}>
 
-              <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-              <Select style={{width:205, height: 50, position: "relative", left:247, top:-5}}
+              <InputLabel htmlFor="filled-alg-native-simple"></InputLabel>
+              <Select style={{width:205, height: 48, position: "relative", left:1087, top:-125}}
                 native
                 onChange={handleChange}
                 inputProps={{
-                  name: 'lob',
-                  id: 'filled-lob-native-simple',
+                  name: 'alg',
+                  id: 'filled-alg-native-simple',
                 }}
                 value={props.botAlgorithm}
                     onChange={(e)=>handleChange("SET_BOT_ALGORITHM",e.target.value)}
@@ -340,11 +369,14 @@ const CSSTextField = withStyles({
                 <option value={5}>HR</option>
                 <option value={6}>PaymentsBank</option>
               </Select>
+              </FormControl>
               </div>
-              <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Bot MSISDN Log:  </div> </p>
+              <p> <div className="field1" style={{ position: "relative", left:30, top:-75}}> Bot MSISDN Log:  </div> </p>
               <div className="block"> 
-                    <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+              <FormControl variant="filled" className={classes.formControl}>
+
+                    <InputLabel htmlFor="filled-msisdn-native-simple"></InputLabel>
+                    <Select style={{width:205, height: 48, position: "relative", left:1087, top:-143}}
                       native
                       onChange={handleChange}
                       inputProps={{
@@ -359,14 +391,14 @@ const CSSTextField = withStyles({
                       <option value={1}>True</option>
                       <option value={2}>False</option>
                     </Select>
-                    
+                    </FormControl>
 
-                      <p> <div className = "field1" style={{ position: "relative", left:-130, top:20}} >Enter Bot Classify Score: </div></p>
+                      <p> <div className = "field1" style={{ position: "relative", left:-355, top:-55}} >Enter Bot Classify Score: </div></p>
                         <InputLabel id="demo-customized-select-label">   </InputLabel><div className= "field"> 
                         
                       <div className="block"> 
                       
-                          <CSSTextField style={{width:205, height: 50, position: "relative", left:5, top:-40}}
+                          <CSSTextField size="small" style={{width:205, height: 20, position: "relative", left:2, top:-140}}
                           id="filled-secondary"
                           variant="filled"
                           color="secondary"
@@ -385,7 +417,7 @@ const CSSTextField = withStyles({
 
             
             <br />
-            <div className={classes.root} style={{  position:"relative", left:-10, top:60}}>
+            <div className={classes.root} style={{  position:"relative", left:-30, top:-40}}>
            <input
             accept="image/*"
             className={classes.input}
@@ -398,12 +430,12 @@ const CSSTextField = withStyles({
           </label>
         
         </div>
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:330, top:-75}}
             onClick={createBot}>
                 Save
             </BootstrapButton>
             &emsp; &emsp;
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}>
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:330, top:-75}} onClick={loadBot}>
                 Load
             </BootstrapButton>
             <br />
@@ -422,7 +454,7 @@ const CSSTextField = withStyles({
             </div>
             <br/>
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:350, top:20}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:350, top:-180}}
             onClick={deleteBot}>
                 Delete Bot
             </BootstrapButton>
@@ -441,6 +473,7 @@ const CSSTextField = withStyles({
       botAlgorithm:state.botManager.botAlgorithm,
       botMsisdn:state.botManager.botMsisdn,
       botScore:state.botManager.botScore,
+      selectedBot:state.topBar.botName,
     };
   }
   

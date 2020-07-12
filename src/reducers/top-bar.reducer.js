@@ -2,7 +2,7 @@ import {TopBarActionTypes} from "../action-types/top-bar.actiontype";
 
 const initialState={
 	botName:"",
-	botList:['None',"Chat Bot","HR Bot","Payments Bank Bot","PrePaid Bot","DTH Bot"]
+	botList:['None',"chatBot","hrBot","paymentsBankBot","prePaidBot","postpaidSeibelBot","dthBot"]
 	
 };
 

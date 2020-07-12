@@ -9,8 +9,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { HashRouteras as Router, Switch } from 'react-router-dom';
 import store from './store/store';
-import  BotTester from "./components/BotTester";
-import UnrecognizedMails from './components/UnrecognizedMails';
 import Grid from '@material-ui/core/Grid';
 import LoginPage from "./components/LoginPage";
 

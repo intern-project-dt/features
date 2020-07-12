@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,7 +15,8 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { ScenarioManagerActionType } from "../action-types/scenario-manager.actiontype";
 import { connect } from "react-redux";
-import * as ScenarioManager from "../actions/scenario-manager.action"
+import * as ScenarioManager from "../actions/scenario-manager.action";
+import * as TrainedData from "../actions/trained-data.action";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -47,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
     },
     heading1 :{
       position:"relative",
-      top: 110,
-      left: -250,
+      top: -90,
+      left: -180,
       fontFamily: "Segoe UI"
     },
     line1 :{
       position:"relative",
-      top: 110,
+      top: -90,
       width: 900,
       left: 180,
       height: 2,
@@ -112,7 +113,7 @@ const BootstrapInput = withStyles((theme) => ({
 const CSSTextField = withStyles({
   root: {
     width: 205,
-    padding: '10px 0px',
+    padding: '5px 20px',
     position: 'relative',
     top: -70,
     left: 1,
@@ -166,7 +167,15 @@ const CSSTextField = withStyles({
   })(Button);
   
   function InputTextField(props) {
+
     const classes = useStyles();
+    useEffect(() => {
+        
+      fetch(`http://10.5.205.104:8080/trainer/getAllScenarioNames`)
+        .then(res=>res.json())
+        .then(res=>props.dispatch(TrainedData.setScList(res)));
+  
+  });
     const handleChange = (action,input) => {
       switch(action){
         case "SCEDIT_IN" :  
@@ -207,41 +216,71 @@ const CSSTextField = withStyles({
       };
 
           async function saveScenario(){
-            let res = await fetch('http://10.5.205.104:8080/trainer/saveScenario', {
-              method: 'post',
-              headers: {
-                  'Accept': '*/*',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                    scenarioName:props.scenarioName,
-                    scenarioId:props.scenarioId,
-                    scenarioStrategy:props.scenarioStrat,
-                    scenarioResponse:props.scenarioResp,
-                    msisdnRequired:props.reqMSISDN,
-                    feedbackRequired:props.reqFeedback,
-                    scenarioLob:props.scenarioLOB,
-              })
-          });
+              let res = await fetch(`http://10.5.205.104:8080/trainer/saveScenario`, {
+                method: 'post',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    scenario:{
+                      scenarioId:props.scenarioId,
+                      scenarioName:props.scenarioName,
+                      scenarioStrategy:props.scenarioStrat,
+                      scenarioLob:props.scenarioLOB,
+                      scenarioResponse:props.scenarioResp,
+                      msisdnRequired:props.reqMSISDN,
+                      feedbackRequired:props.reqFeedback,
+                      scenarioStep:null,
+                      scenarioIntent:null
+                    }
+                })
+            });
 
-          let result = await res.json();
+            let result = await res.json();
 
+            if(result.status==200)
+              console.log("correct");
+            else
+              console.log("wrong");    
 
     }
 
     async function loadScenario(){
+      var sc;
+      fetch(`http://10.5.205.104:8080/trainer/getAllScenarios`)
+        .then(res=>res.json())
+        .then(res=>{
 
-    }
+          for(sc in res){
+            if(res[sc].scenarioName==props.scenarioEditted)
+            {
+              props.dispatch(ScenarioManager.inputSCName(res[sc].scenarioName));
+              props.dispatch(ScenarioManager.inputSCId(res[sc].scenarioId));
+              props.dispatch(ScenarioManager.inputSCStrat(res[sc].scenarioStrategy));
+              props.dispatch(ScenarioManager.inputSCLOB(res[sc].scenarioLob));
+              props.dispatch(ScenarioManager.inputMSISDN(res[sc].msisdnRequired));
+              props.dispatch(ScenarioManager.inputFB(res[sc].feedbackRequired));
+              props.dispatch(ScenarioManager.inputResp(res[sc].scenarioResponse));
+              break;
+            }
+          }
+
+        });
+
+  }
 
     async function remScenario(){
-      let res = await fetch('http://10.5.205.104:8080/trainer/removeScenario?name={props.scenarioRemove}', {
-                method: 'get'
+      let res = await fetch(`http://10.5.205.104:8080/trainer/removeScenario?name=${props.scenarioRemove}`, {
+                method: 'get',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json'
+                },
                 
             });
 
-
-        let result =await res.json();  
-                  alert("Scenario Removed");      
+        let result =await res.json();      
       
     }
 
@@ -266,72 +305,57 @@ const CSSTextField = withStyles({
                 <div className= "field">  
                 
                 <p> <div className="field1" style={{ position: "relative", left:2, top:-10 }} >Select Scenario to Edit:  </div> </p>
-                <div className="block"><Select style={{width:200, position: "relative", top:-40}}
+                <div className="block">
+                <FormControl variant="filled" className={classes.formControl}>
+                  <Select style={{width:200, height:48, position: "relative", left:425, top:-70}}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
                 value={props.scenarioEditted}
                 onChange={(e)=>handleChange("SCEDIT_IN",e.target.value)}
                 >
-                          <MenuItem value="I want to know my data usage">I want to know my data usage</MenuItem>
-                          <MenuItem value="I want to change my alterante phone number">I want to change my alterante phone number</MenuItem>
-                          <MenuItem value="I want to know my current bill plan">I want to know my current bill plan</MenuItem>
-                          <MenuItem value="I want to migrate from prepaid to postpaid">I want to migrate from prepaid to postpaid</MenuItem>
-                          <MenuItem value="chatbot_greeting">chatbot_greeting</MenuItem>
-                          <MenuItem value="chatbot_closure">chatbot_closure</MenuItem>
-                          <MenuItem value="chatbot_help">chatbot_help</MenuItem>
-                          <MenuItem value="chatbot_new_bill_plan">chatbot_new_bill_plan</MenuItem>
-                          <MenuItem value="chatbot_active_ir">chatbot_active_ir</MenuItem>
-                          <MenuItem value="chatbot_nearest_store">chatbot_nearest_store</MenuItem>
-                          <MenuItem value="chatbot_others">chatbot_others</MenuItem>
-                          <MenuItem value="I want to migrate change my email id">I want to migrate change my email id</MenuItem>
-                          <MenuItem value="I want to disconnect my number">I want to disconnect my number</MenuItem>
-                          <MenuItem value="chatbot_create_family">chatbot_create_family</MenuItem>
-                          <MenuItem value="chatbot_set_data_limit">chatbot_set_data_limit</MenuItem>
-                          <MenuItem value="chatbot_track_data_usage">chatbot_track_data_usage</MenuItem>
-                          <MenuItem value="hr_leave_application">hr_leave_application</MenuItem>
-                          <MenuItem value="hr_leave_policies">hr_leave_policies</MenuItem>
-                          <MenuItem value="hr_pan_update">hr_pan_update</MenuItem>
-                          <MenuItem value="hr_last_claim_date">hr_last_claim_date</MenuItem>
-                          <MenuItem value="hr_slip_required">hr_slip_required</MenuItem>
+                          {
+                props.scList.map((scName) => (
+                  <MenuItem  value={scName} >
+                    {scName}
+                  </MenuItem>
+              ))}
                 </Select>
+                </FormControl>
                    </div>
                 
                 
                 </div>
-                
-            <form className={classes.root} noValidate autoComplete="off">
-                <div className= "field"> 
-                
-                <p> <div className="field1" style={{ position: "relative", left:5, top:-10}}> Enter Scenario Name:  </div> </p>
-                <div className="block"> <CSSTextField style={{height: 30, position: "relative", left:2, top:-50}}
+                <p><div className="field1" style={{ position: "relative", left:25, top:-10}}> Enter Scenario Name: </div></p>
+            <CSSTextField size="small" style={{height: 30, position: "relative", left:330, top:-61}}
                     id="filled-secondary"
                     variant="filled"
                     color="secondary"
                     value={props.scenarioName}
                     onChange={(e)=>handleChange("SC_NAME",e.target.value)}
                   />
-                   </div>
-                </div>
-            </form>
             
-            <p><div className="field1" style={{ position: "relative", left:25, top:20}}> Enter Scenario ID: </div></p>
-            <CSSTextField style={{height: 30, position: "relative", left:330, top:-15}}
+              
+            
+            
+            <p><div className="field1" style={{ position: "relative", left:25, top:-35}}> Enter Scenario ID: </div></p>
+            <CSSTextField size="small" style={{height: 30, position: "relative", left:330, top:-85}}
                     id="filled-secondary"
                     variant="filled"
                     color="secondary"
                     value={props.scenarioId}
-                    onChange={(e)=>handleChange("SC_NAME",e.target.value)}
+                    onChange={(e)=>handleChange("ID_IN",e.target.value)}
                   />
             
               
               </div>
             
-              <p><div className= "field1" style={{ position: "relative", left:27, top:20}}> Select Scenario Strategy: 
+              <p><div className= "field1" style={{ position: "relative", left:27, top:-60}}> Select Scenario Strategy: 
               </div></p>
               <div className="block"> 
 
               <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-              <Select style={{width:205, height: 50, position: "relative", left:247, top:-5}}
+              <FormControl variant="filled" className={classes.formControl}>
+              <Select style={{width:205, height: 48, position: "relative", left:1090, top:-120}}
                 native
                 value={props.scenarioStrat}
                 onChange={(e)=>handleChange("STRAT_IN",e.target.value)}
@@ -344,11 +368,13 @@ const CSSTextField = withStyles({
                       <option value={"FAQScenario"}>FAQScenario</option>
                       <option value={"SwitchScenario"}>SwitchScenario</option>
               </Select>
+              </FormControl>
               </div>
-              <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Select Scenario LOB:  </div> </p>
+              <p> <div className="field1" style={{ position: "relative", left:30, top:-90}}> Select Scenario LOB:  </div> </p>
               <div className="block"> 
                     <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                    <FormControl variant="filled" className={classes.formControl}>
+                    <Select style={{width:205, height: 48, position: "relative", left:1090, top:-149}}
                       native
                       value={props.scenarioLOB}
                       onChange={(e)=>handleChange("LOB_IN",e.target.value)}
@@ -365,11 +391,14 @@ const CSSTextField = withStyles({
                       <option value={"HR"}>HR</option>
                       <option value={"PaymentsBank"}>PaymentsBank</option>
                     </Select>
+                    </FormControl>
                     </div>
-              <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> MSISDN Required:  </div> </p>
+              <p> <div className="field1" style={{ position: "relative", left:30, top:-120}}> MSISDN Required:  </div> </p>
               <div className="block"> 
+
                     <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                    <FormControl variant="filled" className={classes.formControl}>
+                    <Select style={{width:205, height: 48, position: "relative", left:1090, top:-177}}
                       native
                       value={props.reqMSISDN}
                       onChange={(e)=>handleChange("MSISDN_IN",e.target.value)}
@@ -382,12 +411,13 @@ const CSSTextField = withStyles({
                       <option value={"True"}>True</option>
                       <option value={"False"}>False</option>
                     </Select>
-                    
+                    </FormControl>
                   </div>
-                  <p> <div className="field1" style={{ position: "relative", left:30, top:20}}> Feedback Required:  </div> </p>
+                  <p> <div className="field1" style={{ position: "relative", left:30, top:-140}}> Feedback Required:  </div> </p>
               <div className="block"> 
                     <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-                    <Select style={{width:205, height: 50, position: "relative", left:250, top:-10}}
+                    <FormControl variant="filled" className={classes.formControl}>
+                    <Select style={{width:205, height: 48, position: "relative", left:1090, top:-205}}
                       native
                       value={props.reqFeedback}
                       onChange={(e)=>handleChange("FB_IN",e.target.value)}
@@ -400,13 +430,13 @@ const CSSTextField = withStyles({
                       <option value={"True"}>True</option>
                       <option value={"False"}>False</option>
                     </Select>
-
-                      <p> <div className = "field1" style={{ position: "relative", left:-130, top:20}} >Enter Scenario Response: </div></p>
+                    </FormControl>
+                      <p> <div className = "field1" style={{ position: "relative", left:-352, top:-125}} >Enter Scenario Response: </div></p>
                         <InputLabel id="demo-customized-select-label">   </InputLabel><div className= "field"> 
                         
                       <div className="block"> 
                       
-                          <CSSTextField style={{width:205, height: 50, position: "relative", left:5, top:-40}}
+                          <CSSTextField size="small" style={{width:205, height: 48, position: "relative", left:23, top:-195}}
                           id="filled-secondary"
                           variant="filled"
                           color="secondary"
@@ -426,17 +456,17 @@ const CSSTextField = withStyles({
 
             
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:540, top:-150}}
             onClick={saveScenario}>
                 Save
             </BootstrapButton>
             &emsp; &emsp;
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:520, top:30}}>
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:540, top:-150}} onClick={loadScenario}>
                 Load
             </BootstrapButton>
             <br />
             <div className= "DeleteBot">
-            <Typography variant="h3" className={classes.heading1} style={{ position: "relative", left:-100, top:20}}>
+            <Typography variant="h3" className={classes.heading1}>
               Remove Scenario
             </Typography>
         
@@ -445,30 +475,34 @@ const CSSTextField = withStyles({
             <div className= "field1">  
             
                 <br /> <br />
-                <p> <div className="field1" style={{ position: "relative", left:-100, top:20}}> Feedback Required:  </div> </p>
+                <p> <div className="field1" style={{ position: "relative", left:-120, top:-200}}> Select Scenario to Delete:  </div> </p>
               <div className="block"> 
                     <InputLabel htmlFor="filled-age-native-simple"></InputLabel>
-                    <Select style={{width:205, height: 50, position: "relative", left:10, top:-10}}
+                    <FormControl variant="filled" className={classes.formControl}>
+                    <Select style={{width:205, height: 48, position: "relative", left:420, top:-250}}
                       native
                       value={props.scenarioRemove}
-                      onChange={(e)=>handleChange("REMSC_IN",e.target.value)}
+                      onChange={(e)=>handleChange("USER_IN",e.target.value)}
                       inputProps={{
                         name: 'msisdn',
                         id: 'filled-msisdn-native-simple',
                       }}
                     >
-                      <option aria-label="None" value="" />
-                      <option value={"True"}>True</option>
-                      <option value={"False"}>False</option>
+                      {
+                props.scList.map((scName) => (
+                  <MenuItem  value={scName} >
+                    {scName}
+                  </MenuItem>
+              ))}
                     </Select>
-                
+                    </FormControl>
                         </div>
             </div>
             <br/>
             <br />
-            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:550, top:40}}
+            <BootstrapButton variant="contained" color="primary" disableRipple className={classes.margin} style={{position: "relative", left:450, top:-190}}
             onClick={remScenario}>
-                Remove 
+                Delete Bot
             </BootstrapButton>
             </div>
             </div>
@@ -487,7 +521,8 @@ const CSSTextField = withStyles({
         reqMSISDN:state.scenarioManager.reqMSISDN,
         reqFeedback:state.scenarioManager.reqFeedback,
         scenarioResp:state.scenarioManager.scenarioResp,
-        scenarioRemove:state.scenarioManager.scenarioRemove
+        scenarioRemove:state.scenarioManager.scenarioRemove,
+        scList:state.trainedData.scList
       };
   }
   
