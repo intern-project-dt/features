@@ -249,6 +249,9 @@ useEffect(() => {
       .then(res=>res.json())
       .then(res=>{
         for(var x in res){
+          if(!res[x].label || !res[x].scenario) {
+            continue;
+          }
           temp.push(res[x].label);
           temp2.push(res[x].scenario.scenarioName);
         }
@@ -261,7 +264,7 @@ useEffect(() => {
       //setScDetail([{"id":"5c18be0c3b228558728778a4","label":"abuse","scenario":{"id":"5b0bcf473b22857dcf7f1065","scenarioId":"5b0bce9c98a4edf346508a30","scenarioName":"Abuse","scenarioStrategy":"DTScenario","scenarioLob":"null","scenarioResponse":"","msisdnRequired":false,"feedbackRequired":true,"scenarioKey":"5b0bce9c98a4edf346508a30-Abuse"},"sampleCount":0}]);
 
 
-});
+},[props.botName]);
 
 
   const handleChange = (action, input) => {
@@ -299,6 +302,8 @@ useEffect(() => {
 
   async function mapIntents() {
     let intentMapp = new Map();
+    let formData=new FormData();
+    formData.append(props.botIntent,props.botScenario);
     intentMapp[props.botIntent] = props.botScenario;
     let res = await fetch(`http://10.5.205.104:8080/trainer/mapBotIntent/${props.botName}`, {
       method: 'post',
@@ -306,9 +311,7 @@ useEffect(() => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        intentMap: intentMapp
-      })
+      body: formData
     });
 
     let result = await res.json();
@@ -342,7 +345,7 @@ useEffect(() => {
 
     let result= await res.json();
     
-
+    console.log("haha --- ", result)
       readXlsxFile(myInput.files[0]).then((rows) => {
         for(var row in rows){
           if(row[0]!="AI Intent"){
@@ -420,9 +423,9 @@ useEffect(() => {
             > 
             {
                 props.inList.map((inName) => (
-                  <MenuItem  value={inName} >
+                  <option  value={inName} >
                     {inName}
-                  </MenuItem>
+                  </option>
             ))}
 
             </Select>
@@ -442,9 +445,9 @@ useEffect(() => {
               >
               {
                 props.scList.map((scName) => (
-                  <MenuItem  value={scName} >
+                  <option  value={scName} >
                     {scName}
-                  </MenuItem>
+                  </option>
               ))}
           </Select>
               </div>
@@ -530,8 +533,8 @@ useEffect(() => {
         </TableHead>
         <TableBody>
           {
-            props.scDList.map((row) => (
-            <StyledTableRow key={row.label}>
+            props.scDList && Array.isArray(props.scDList) && props.scDList.map((row) => {
+            return row.scenario && <StyledTableRow key={row.label}>
               <StyledTableCell component="th" scope="row">
                 {counter}
               </StyledTableCell>
@@ -542,7 +545,9 @@ useEffect(() => {
               <StyledTableCell align="right">{row.scenario.msisdnRequired.toString()}</StyledTableCell>
               <StyledTableCell align="right">{row.scenario.feedbackRequired.toString()}</StyledTableCell>
             </StyledTableRow>
-          ))}
+            }
+          )
+        }
         </TableBody>
       </Table>
     </TableContainer>
