@@ -170,20 +170,23 @@ const CSSTextField = withStyles({
 
     const classes = useStyles();
     useEffect(() => {
-        
+    if(props.scList.length==0 && props.scDList.length==0){
       let temp2=[];
       fetch(`http://10.5.205.104:8080/trainer/getBotScenarios/${props.botName}`)
         .then(res=>res.json())
         .then(res=>{
           for(var x in res){
+            if(!res[x].scenario) {
+              continue;
+            }
             temp2.push(res[x].scenario.scenarioName);
           }
           props.dispatch(TrainedData.setScList(temp2));
   
           props.dispatch(TrainedData.setScDList(res));
         });
-  
-  });
+    }
+  },[props.botName]);
     const handleChange = (action,input) => {
       switch(action){
         case "SCEDIT_IN" :  
@@ -191,7 +194,7 @@ const CSSTextField = withStyles({
           break;
   
         case "SC_NAME" :
-          props.dispatch(ScenarioManager.inputEditSC(input));
+          props.dispatch(ScenarioManager.inputSCName(input));
           break;   
         
   
@@ -227,7 +230,7 @@ const CSSTextField = withStyles({
         let res = await fetch(`http://10.5.205.104:8080/trainer/saveScenario`, {
           method: 'post',
           headers: {
-              'Accept': '/',
+              'Accept': '*/*',
               'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -268,8 +271,8 @@ const CSSTextField = withStyles({
               props.dispatch(ScenarioManager.inputSCId(res[sc].scenarioId));
               props.dispatch(ScenarioManager.inputSCStrat(res[sc].scenarioStrategy));
               props.dispatch(ScenarioManager.inputSCLOB(res[sc].scenarioLob));
-              props.dispatch(ScenarioManager.inputMSISDN(res[sc].msisdnRequired));
-              props.dispatch(ScenarioManager.inputFB(res[sc].feedbackRequired));
+              props.dispatch(ScenarioManager.inputMSISDN(res[sc].msisdnRequired.toString()));
+              props.dispatch(ScenarioManager.inputFB(res[sc].feedbackRequired.toString()));
               props.dispatch(ScenarioManager.inputResp(res[sc].scenarioResponse));
               break;
             }
@@ -493,7 +496,7 @@ const CSSTextField = withStyles({
                     <Select style={{width:205, height: 48, position: "relative", left:420, top:-250}}
                       native
                       value={props.scenarioRemove}
-                      onChange={(e)=>handleChange("USER_IN",e.target.value)}
+                      onChange={(e)=>handleChange("SC_REMOVE",e.target.value)}
                       inputProps={{
                         name: 'msisdn',
                         id: 'filled-msisdn-native-simple',
@@ -534,6 +537,7 @@ const CSSTextField = withStyles({
       scenarioResp:state.scenarioManager.scenarioResp,
       scenarioRemove:state.scenarioManager.scenarioRemove,
       scList:state.trainedData.scList,
+      scDList:state.trainedData.scDList,
       botName:state.topBar.botName
     };
 }

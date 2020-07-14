@@ -18,6 +18,8 @@ import Airtel from './Airtel.png';
 import { connect } from "react-redux";
 import { LoginActionType } from "../action-types/login.actiontype";
 import * as Login from "../actions/login.action"
+import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import homepage from "./homepage";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -217,8 +219,9 @@ const CSSTextField = withStyles({
 
             if (result && result.success){
                 props.dispatch(Login.loggedIn(true)) 
-                props.dispatch(Login.setJwt(result.jToken))               
+                props.dispatch(Login.setJwt(result.jToken))           
                 console.log("Correct");
+                
                 
             }
             else{

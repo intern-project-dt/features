@@ -1,7 +1,5 @@
 import {TrainedDataActionType} from "../action-types/trained-data.actiontype";
 
-
-
 const initialState={
     query:"",
     botIntent:"",
@@ -53,28 +51,65 @@ export default function TrainedDataReducer(state = initialState, action){
             };
 
         case TrainedDataActionType.SET_INTENT:
+            let temp={};
             for(var x in state.scDList){
                 if(state.scDList[x].scenario.scenarioName===state.botScenario)
                 {
-                    state.scDList[x].label=state.botIntent;
-                    return state;
+                    temp=state.scDList[x];
+                    break;
                 }
             }
-
+            for(var x in state.scDList){
+             if(state.scDList[x].label===state.botIntent)
+                {
+                    state.scDList[x].scenario=temp.scenario;
+                    break;
+                }   
+            }
+            return state;
+//FORECHANGE
         case TrainedDataActionType.SET_BINTENT:
+            let flag1=0,flag2=0,flag3=0;
+            temp={};
             for(var x in state.scDList){
                 if(state.scDList[x].scenario.scenarioName===action.obj.scenario.scenarioName)
                 {
-                    state.scDList[x].label=action.obj.label;
-                    return state;
+                    temp=state.scDList[x];
+                    break;
                 }
             }
+            for(var x in state.scDList){
+                if(state.scDList[x].label===action.obj.label)
+                {
+                    state.scDList[x].scenario=action.obj.scenario;
+                    flag1=1;break;
+                }   
+            }
+            for(var x in state.scList){
+                if(state.scList[x]===action.obj.scenario.scenarioName)
+                {
+                    
+                    flag2=1;break;
+                }
+            }
+            for(var x in state.inList){
+                if(state.inList[x]===action.obj.label)
+                {
+                    flag3=1;break;
+                }
+            }
+            if(flag1!=1)
             state.scDList.push(action.obj);
+            if(flag2!=1)
+            state.scList.push(action.obj.scenario.scenarioName);
+            if(flag3!=1)
+            state.inList.push(action.obj.label);
+
             return state;
 
 //FINAL
         case TrainedDataActionType.ADD_SCENARIO:
-            let temp=[];
+            temp=[];
             let temp2=action.scenario;
             temp2.id=action.scenario.scenarioId;
             temp2.scenarioKey=action.scenario.scenarioId+"-"+action.scenario.scenarioName;
@@ -88,10 +123,11 @@ export default function TrainedDataReducer(state = initialState, action){
 
 //FINAL
        case TrainedDataActionType.REM_SCENARIO:
-            temp=[];
             for(var x in state.scDList){
                 if(state.scDList[x].scenario.scenarioName!=action.remScenario)
-                    temp.push(state.scDList[x]);
+                    continue;
+                else
+                    state.scDList[x].scenario.scenarioName=state.scDList[x].scenario.scenarioId="null"
             }
             temp2=[];
             for(var x in state.scList){
@@ -101,7 +137,6 @@ export default function TrainedDataReducer(state = initialState, action){
             return{
                 ...state,
                 scList:temp2,
-                scDList:temp
             };
 
 
