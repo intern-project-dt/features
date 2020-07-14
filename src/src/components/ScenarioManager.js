@@ -329,9 +329,9 @@ const CSSTextField = withStyles({
                 >
                           {
                 props.scList.map((scName) => (
-                  <MenuItem  value={scName} >
+                  <options  value={scName} >
                     {scName}
-                  </MenuItem>
+                  </options>
               ))}
                 </Select>
                 </FormControl>
