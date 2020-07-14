@@ -343,10 +343,10 @@ for(var bot in res){
               }}
             >
               <option aria-label="None" value="" />
-              <option value={1}>Default</option>
-              <option value={2}>External</option>
-              <option value={3}>Native</option>
-              <option value={4}>Graph</option>
+              <option value={"DEFAULT"}>Default</option>
+              <option value={"EXTERNAL"}>External</option>
+              <option value={"NATIVE"}>Native</option>
+              <option value={"GRAPH"}>Graph</option>
             </Select>
             </FormControl>
 
@@ -370,12 +370,12 @@ for(var bot in res){
 
               >
                 <option aria-label="None" value="" />
-                <option value={1}>PostPaid</option>
+                <option value={"postpaid-agent-2,db87c5ddba31ffcc0b308c48b2f9a2cf,default"}>PostPaid</option>
                 <option value={2}>PrePaid</option>
                 <option value={3}>DTH</option>
                 <option value={4}>Telemedia</option>
-                <option value={5}>HR</option>
-                <option value={6}>PaymentsBank</option>
+                <option value={"test_bot.py"}>HR</option>
+                <option value={"payments-bank-agent-2,5240347d4e19e7759f084bb883c395ae,default"}>PaymentsBank</option>
               </Select>
               </FormControl>
               </div>
@@ -475,8 +475,8 @@ for(var bot in res){
 
   function mapStateToProps(state) {
     return {
-      botName:state.botManager.mainNode,
-      botToken:state.botManager.prevNode,
+      botName:state.botManager.botName,
+      botToken:state.botManager.botToken,
       botStrategy:state.botManager.botStrategy,
       botAlgorithm:state.botManager.botAlgorithm,
       botMsisdn:state.botManager.botMsisdn,
