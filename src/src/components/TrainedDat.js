@@ -489,12 +489,11 @@ useEffect(() => {
             type="file"
           />
           <br />
-          <label htmlFor="contained-button-file">
-          <BootstrapButton style={{position:"relative",left:475,top:-30}} variant="contained" color="primary" component="span"
+          
+        <BootstrapButton style={{position:"relative",left:475,top:-30}} variant="contained" color="primary" component="span"
         onClick={mapIntentsBulk}>
           Upload
         </BootstrapButton>
-          </label>
         
         </div>
           
