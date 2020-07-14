@@ -33,13 +33,13 @@ export function inputSCLOB(SCLOB){
 
 export function inputMSISDN(msisdn){
 	return {type:ScenarioManagerActionType.IS_MSISDN_IN,
-			reqMSISDN:msisdn
+			reqMSISDN:msisdn === true? 1:2
 	};
 }
 
 export function inputFB(feedback){
 	return {type:ScenarioManagerActionType.IS_FB_IN,
-			reqFeedback:feedback
+			reqFeedback:feedback === true? 1:2
 	};
 }
 

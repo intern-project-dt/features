@@ -398,10 +398,10 @@ const CSSTextField = withStyles({
                       }}
                     >
                       <option aria-label="None" value="" />
-                      <option value={"Postpaid"}>Postpaid</option>
-                      <option value={"Prepaid"}>Prepaid</option>
-                      <option value={"DTH"}>DTH</option>
-                      <option value={"Telemedia"}>Telemedia</option>
+                      <option value={"PostPaid"}>Postpaid</option>
+                      <option value={"PrePaid"}>Prepaid</option>
+                      <option value={""}>DTH</option>
+                      <option value={"TeleMedia"}>Telemedia</option>
                       <option value={"HR"}>HR</option>
                       <option value={"PaymentsBank"}>PaymentsBank</option>
                     </Select>
@@ -422,8 +422,8 @@ const CSSTextField = withStyles({
                       }}
                     >
                       <option aria-label="None" value="" />
-                      <option value={"True"}>True</option>
-                      <option value={"False"}>False</option>
+                      <option value={1}>True</option>
+                      <option value={2}>False</option>
                     </Select>
                     </FormControl>
                   </div>
@@ -441,8 +441,8 @@ const CSSTextField = withStyles({
                       }}
                     >
                       <option aria-label="None" value="" />
-                      <option value={"True"}>True</option>
-                      <option value={"False"}>False</option>
+                      <option value={1}>True</option>
+                      <option value={2}>False</option>
                     </Select>
                     </FormControl>
                       <p> <div className = "field1" style={{ position: "relative", left:-352, top:-125}} >Enter Scenario Response: </div></p>
